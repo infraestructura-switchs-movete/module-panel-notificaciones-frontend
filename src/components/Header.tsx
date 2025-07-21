@@ -13,7 +13,7 @@ export default function Header({ vistaActual, onCambiarVista, llamadasActivas }:
       {/* Header Principal */}
       <div className="bg-red-600 text-white p-6 shadow-lg">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold text-center mb-6">Restaurante Manager</h1>
+          <h1 className="text-3xl font-bold text-center mb-6">Chuzo de Ivan</h1>
           
           <div className="flex justify-center gap-4 mb-6">
             <button 

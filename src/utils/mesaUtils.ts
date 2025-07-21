@@ -48,7 +48,7 @@ export function formatearPrecio(precio: number): string {
 // Función para actualizar estados de mesas desde la API
 export async function actualizarEstadoMesas(setMesas: React.Dispatch<React.SetStateAction<any[]>>) {
   try {
-    const response = await fetch("http://localhost:8080/api/back-whatsapp-qr-app/restauranttable");
+    const response = await fetch(" https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/restauranttable");
     if (!response.ok) throw new Error("No se pudo obtener el estado de las mesas");
     
     const mesasAPI = await response.json();

@@ -12,7 +12,7 @@ export default function HistorialGeneral({ mesas }: HistorialGeneralProps) {
   const [filtroMesa, setFiltroMesa] = useState('');
   const [busqueda, setBusqueda] = useState('');
 
-  // Obtener todos los pedidos de todas las mesas
+
   const todosPedidos = mesas.flatMap(mesa => 
     mesa.pedidos.map(pedido => ({
       ...pedido,

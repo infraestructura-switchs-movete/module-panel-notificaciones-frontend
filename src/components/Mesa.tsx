@@ -55,14 +55,14 @@ export default function Mesa({
     getOrdersHistory(mesa.mesa);
   }, [groupedOrders]);
 
-  // Supongamos que mesa.orders viene de tu API o contexto
+
   useEffect(() => {
     if (mesa?.orders && mesa.orders.length > 0) {
       const grouped = groupOrdersByOrderId(mesa.orders);
       setGroupedOrders(grouped);
     }
   }, [mesa?.orders]);
-  // Estado dinámico para mostrar si la mesa está disponible, ocupada o reservada
+
   const estadoInfo = {
     1: { texto: "Disponible", color: "bg-green-200" },
     2: { texto: "Ocupada", color: "bg-red-200" },
@@ -78,37 +78,33 @@ export default function Mesa({
   };
 
   const handleChangeStatus = async (nuevoEstado: number) => {
-    // Iniciar estado de carga
     setMessage({ text: "Procesando solicitud...", color: "text-blue-600" });
-    //setLlamadaMeseroAtendida(false); // Reiniciar estado visual mientras procesa
-
-    // const nuevoEstado = mesa.statusMesa === 1 ? 2 : 1; // Alternar entre libre y ocupada
 
     try {
       await onCambiarEstado(mesa.mesa, nuevoEstado);
 
-      // Éxito
+  
       setMessage({
         text: "La solicitud ha sido atendida.",
         color: "text-green-600",
       });
-      setLlamadaMeseroAtendida(true); // Indicar que fue atendida
+      setLlamadaMeseroAtendida(true);
     } catch (error) {
-      // Error
+
       console.error("Error al cambiar el estado:", error);
       setMessage({
         text: "No se pudo atender la solicitud.",
         color: "text-red-600",
       });
       setTimeout(() => {
-        setLlamadaMeseroAtendida(false); // No se atendió por error
+        setLlamadaMeseroAtendida(false);
       }, 5000);
     }
 
-    // Resetear mensaje después de 2 segundos
+
     setTimeout(() => {
       setMessage({ text: "Mesa sin solicitudes.", color: "text-gray-600" });
-      // Opcional: reiniciar llamada mesero solo si quieres permitir nuevas solicitudes
+
       // setLlamadaMeseroAtendida(false);
     }, 5000);
   };
@@ -126,9 +122,7 @@ export default function Mesa({
   const waiterCall = async (tableId: number, tableNumber: number) => {
     // Iniciar estado de carga
     setMessage({ text: "Procesando solicitud...", color: "text-blue-600" });
-    //setLlamadaMeseroAtendida(false); // Reiniciar estado visual mientras procesa
 
-    // const nuevoEstado = mesa.statusMesa === 1 ? 2 : 1; // Alternar entre libre y ocupada
 
     try {
       await onWaiterCall(tableId, tableNumber);
@@ -138,7 +132,7 @@ export default function Mesa({
         text: "La solicitud ha sido atendida.",
         color: "text-green-600",
       });
-      setLlamadaMeseroAtendida(true); // Indicar que fue atendida
+      setLlamadaMeseroAtendida(true); 
       mesa.statusMesa = 2;
     } catch (error) {
       // Error
@@ -148,14 +142,12 @@ export default function Mesa({
         color: "text-red-600",
       });
       setTimeout(() => {
-        setLlamadaMeseroAtendida(false); // No se atendió por error
+        setLlamadaMeseroAtendida(false); 
       }, 5000);
     }
 
-    // Resetear mensaje después de 2 segundos
     setTimeout(() => {
       setMessage({ text: "Mesa sin solicitudes.", color: "text-gray-600" });
-      // Opcional: reiniciar llamada mesero solo si quieres permitir nuevas solicitudes
       // setLlamadaMeseroAtendida(false);
     }, 5000);
   };
@@ -181,7 +173,7 @@ export default function Mesa({
       const data = await onSendOrder(orderId);
       console.log("Pedido enviado:", data);
 
-      // Aquí puedes actualizar el estado local para eliminar el pedido
+      
       setGroupedOrders((prev) =>
         prev.filter((order) => order.orderId !== orderId)
       );
@@ -305,7 +297,7 @@ export default function Mesa({
             <button
               onClick={() => {
                 setMostrandoHistorial(!mostrandoHistorial);
-                onVerHistorial(mesa.tableId); // Llama a la función para cargar el historial
+                onVerHistorial(mesa.tableId); 
                 setIsModalOpen(true);
               }}
               className="bg-red-600 text-white px-4 py-2 rounded-md text-sm hover:bg-red-700 transition-colors duration-200 flex items-center gap-1 font-medium"
