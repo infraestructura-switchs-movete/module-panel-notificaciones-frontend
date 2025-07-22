@@ -1,6 +1,6 @@
 import { Table } from '../types/TableType';
 
-const API_URL = ' https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/restauranttable';
+const API_URL = 'https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/restauranttable';
 
 export const obtenerTablas = async (): Promise<Table[]> => {
   try {

@@ -3,7 +3,7 @@ import { Pedido } from "../types/restaurant";
 
 export const getOrders = async (): Promise<Pedido[]> => {
   try {
-    const response = await fetch(' https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/order-delivery/get-all-orders', {
+    const response = await fetch('https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/order-delivery/get-all-orders', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -26,7 +26,7 @@ export const getOrders = async (): Promise<Pedido[]> => {
 export const deleteOrder = async (orderTransactionDeliveryId: number): Promise<boolean> => {
   try {
     const response = await fetch(
-      ` https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/order-delivery/delete/${orderTransactionDeliveryId}`,
+      `https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/order-delivery/delete/${orderTransactionDeliveryId}`,
       { method: 'DELETE' }
     );
     return response.ok;
@@ -43,7 +43,7 @@ export const updateOrderStatus = async (
 ): Promise<boolean> => {
   try {
     const response = await fetch(
-      ` https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/order-delivery/updateStatus/${orderTransactionDeliveryId}`,
+      `https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/order-delivery/updateStatus/${orderTransactionDeliveryId}`,
       {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

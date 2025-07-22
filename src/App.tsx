@@ -7,21 +7,31 @@ import PanelPedidos from "./components/PanelPedidos";
 import HistorialGeneral from "./components/HistorialGeneral";
 import { Mesa as MesaType } from "./types/restaurant";
 import axios from "axios";
-import { OrderHistoryResponse, OrderResponse, TableOrderWithId } from "./types/TableType";
+import {
+  OrderHistoryResponse,
+  OrderResponse,
+  TableOrderWithId,
+} from "./types/TableType";
 
-const socket = io(" https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app");
+const socket = io(
+  "https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app"
+);
 
 function App() {
-  const [vistaActual, setVistaActual] = useState<"mesas" | "pedidos" | "historial">("mesas");
+  const [vistaActual, setVistaActual] = useState<
+    "mesas" | "pedidos" | "historial"
+  >("mesas");
   const [mesas, setMesas] = useState<MesaType[]>([]);
-  const [mesasConOrdenes, setMesasConOrdenes] = useState<TableOrderWithId[]>([]);
+  const [mesasConOrdenes, setMesasConOrdenes] = useState<TableOrderWithId[]>(
+    []
+  );
   const [llamadasActivas] = useState(0);
 
   // Fusionar mesas con órdenes
   const obtenerOrdenesYFusionarConMesas = useCallback(async () => {
     try {
       const response = await axios.get<OrderResponse[]>(
-        " https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/order"
+        "https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/order"
       );
       const ordenes = response.data;
 
@@ -47,7 +57,7 @@ function App() {
     const obtenerEstadoMesas = async () => {
       try {
         const response = await axios.get(
-          " https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/restauranttable"
+          "https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/restauranttable"
         );
         setMesas(response.data);
         await obtenerOrdenesYFusionarConMesas();
@@ -57,8 +67,6 @@ function App() {
     };
 
     obtenerEstadoMesas();
-    const interval = setInterval(obtenerEstadoMesas, 15000);
-    return () => clearInterval(interval);
   }, []);
 
   // Escuchar el evento de actualización de mesa desde el servidor
@@ -66,9 +74,7 @@ function App() {
     socket.on("mesa_actualizada", (data) => {
       setMesas((prevMesas) =>
         prevMesas.map((mesa) =>
-          mesa.tableId === data.mesa
-            ? { ...mesa, status: data.estado }
-            : mesa
+          mesa.tableId === data.mesa ? { ...mesa, status: data.estado } : mesa
         )
       );
       obtenerOrdenesYFusionarConMesas();
@@ -91,7 +97,7 @@ function App() {
     try {
       const numeroMesa = Math.max(...mesas.map((m) => m.tableNumber), 0) + 1;
       const response = await axios.post(
-        " https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/restauranttable",
+        "https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/restauranttable",
         {
           tableNumber: numeroMesa,
         }
@@ -110,7 +116,9 @@ function App() {
 
   const eliminarMesa = async (tableId: number) => {
     try {
-      await axios.delete(` https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/restauranttable/${tableId}`);
+      await axios.delete(
+        `https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/restauranttable/${tableId}`
+      );
       setMesas(mesas.filter((mesa) => mesa.tableId !== tableId));
     } catch (error) {
       console.error("Error al eliminar la mesa:", error);
@@ -120,8 +128,8 @@ function App() {
   const cambiarEstadoMesa = async (tableNumber: number, status: number) => {
     const url =
       status === 1
-        ? " https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/restauranttable/change/status-free"
-        : " https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/restauranttable/change/status-ocuped";
+        ? "https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/restauranttable/change/status-free"
+        : "https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/restauranttable/change/status-ocuped";
 
     try {
       await axios.post(`${url}?tableNumber=${tableNumber}`);
@@ -140,11 +148,11 @@ function App() {
     const payload = { tableId, status: 1 };
     try {
       await axios.post(
-        " https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/waitercall/create-waitercall",
+        "https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/waitercall/create-waitercall",
         payload
       );
       await axios.post(
-        ` https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/restauranttable/change/status-ocuped?tableNumber=${tableNumber}`
+        `https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/restauranttable/change/status-ocuped?tableNumber=${tableNumber}`
       );
     } catch (error) {
       console.error("Error al llamar al mesero:", error);
@@ -154,22 +162,26 @@ function App() {
 
   const sendOrder = async (orderId: number) => {
     try {
-      await axios.post(` https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/order/status/send/${orderId}`);
+      await axios.post(
+        `https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/order/status/send/${orderId}`
+      );
     } catch (error) {
       console.error("Error al enviar la orden:", error);
       throw new Error("Error al enviar la orden.");
     }
   };
 
-  const getOrdersHistory = async(tableNumber:number)=>{
+  const getOrdersHistory = async (tableNumber: number) => {
     try {
-      const data = await axios.get<OrderHistoryResponse[]>(` https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/order/enviada/${tableNumber}`)
-      return data.data
+      const data = await axios.get<OrderHistoryResponse[]>(
+        `https://arqmv-module-back-whatsapp-qr-app-backend.onrender.com/api/back-whatsapp-qr-app/order/enviada/${tableNumber}`
+      );
+      return data.data;
     } catch (error) {
-      console.error("Error al obtener el historial: ", error)
-      throw new Error("Error al obtener el historial.")
+      console.error("Error al obtener el historial: ", error);
+      throw new Error("Error al obtener el historial.");
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -219,7 +231,5 @@ function App() {
     </div>
   );
 }
-
-
 
 export default App;
