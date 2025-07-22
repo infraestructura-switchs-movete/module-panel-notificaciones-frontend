@@ -42,16 +42,6 @@ function PanelPedidos() {
     }
   };
 
-  useEffect(() => {
-    cargarPedidos(true);
-    const interval = setInterval(() => cargarPedidos(false), 100);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    cargarPedidos();
-  }, []);
-
   const pedidosActivos = pedidosState.filter(
     (p) => p.statusOrder !== "ENTREGADO" && p.status === "ACTIVE"
   );
